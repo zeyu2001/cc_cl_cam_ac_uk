@@ -39,7 +39,7 @@ let rec find loc x = function
 
 
 (* may want to make this more interesting someday ... *) 
-let rec match_types (t1, t2) = (t1 = t2) 
+let match_types (t1, t2) = (t1 = t2) 
 
 let make_pair loc (e1, t1) (e2, t2)  = (Pair(loc, e1, e2), TEproduct(t1, t2))
 let make_inl loc t2 (e, t1)          = (Inl(loc, t2, e), TEunion(t1, t2))
@@ -87,9 +87,9 @@ let make_deref loc (e, t) =
 let make_uop loc uop (e, t) = 
     match uop, t with 
     | NEG, TEint  -> (UnaryOp(loc, uop, e), t) 
-    | NEG, t'     -> report_expecting e "integer" t
+    | NEG, _      -> report_expecting e "integer" t
     | NOT, TEbool -> (UnaryOp(loc, uop, e), t) 
-    | NOT, t'     -> report_expecting e "boolean" t
+    | NOT, _      -> report_expecting e "boolean" t
 
 let make_bop loc bop (e1, t1) (e2, t2) = 
     match bop, t1, t2 with 

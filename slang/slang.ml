@@ -30,12 +30,12 @@ let i2 (file, e)   = wrap file e (fun x -> Interp_2.string_of_value (fst (Interp
 let i3 (file, e)   = wrap file e (fun x -> Interp_3.string_of_value (Interp_3.interpret x)) "Interpreter 3"
 let i4 (file, e)   = wrap file e (fun x -> Jargon.string_of_value (Jargon.interpret x)) "Jargon VM"
 
-let i4x86 (file, e) = let _ = Jargon_to_x86.emit_x86 e in None			  
-			  
+let i4x86 (_, e)   = let _ = Jargon_to_x86.emit_x86 e in None
+
 (* show compiled code *)
-let i2cc (file, e)   = let _ = print_string (Interp_2.string_of_code (Interp_2.compile e)) in None
-let i3cc (file, e)   = let _ = print_string (Interp_3.string_of_code (Interp_3.compile e)) in None
-let i4cc (file, e)   = let _ = print_string (Jargon.string_of_listing (Jargon.compile e)) in None
+let i2cc (_, e)   = let _ = print_string (Interp_2.string_of_code (Interp_2.compile e)) in None
+let i3cc (_, e)   = let _ = print_string (Interp_3.string_of_code (Interp_3.compile e)) in None
+let i4cc (_, e)   = let _ = print_string (Jargon.string_of_listing (Jargon.compile e)) in None
 
 let interpreters = [
     (* use-flag,  the action, a description string *)

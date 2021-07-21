@@ -16,8 +16,6 @@ type type_expr =
    | TEproduct of type_expr * type_expr
    | TEunion of type_expr * type_expr
 
-type formals = (var * type_expr) list
-
 type oper = ADD | MUL | DIV | SUB | LT | AND | OR | EQ | EQB | EQI
 
 type unary_oper = NEG | NOT 
@@ -219,8 +217,8 @@ let rec string_of_expr = function
     | Pair(_, e1, e2)     -> mk_con "Pair" [string_of_expr e1; string_of_expr e2]
     | Fst(_, e)           -> mk_con "Fst" [string_of_expr e] 
     | Snd(_, e)           -> mk_con "Snd" [string_of_expr e] 
-    | Inl(_, t, e)        -> mk_con "Inl" [string_of_expr e] 
-    | Inr(_, t, e)        -> mk_con "Inr" [string_of_expr e] 
+    | Inl(_, _, e)        -> mk_con "Inl" [string_of_expr e] 
+    | Inr(_, _, e)        -> mk_con "Inr" [string_of_expr e] 
     | Seq (_, el)         -> mk_con "Seq" [string_of_expr_list el] 
     | While (_, e1, e2)   -> mk_con "While" [string_of_expr e1; string_of_expr e2]
     | Ref(_, e)           -> mk_con "Ref" [string_of_expr e] 
@@ -241,7 +239,7 @@ let rec string_of_expr = function
              mk_con "" [x; string_of_type t1; string_of_expr e1]; 
              string_of_type t2; 
              string_of_expr e2]
-    | Case(_, e, (x1, t1, e1), (x2, t2, e2)) -> 
+    | Case(_, e, (x1, t1, e1), (x2, _, e2)) -> 
           mk_con "Case" [
 	     string_of_expr e; 
 	     mk_con "" [x1; string_of_type t1; string_of_expr e1]; 

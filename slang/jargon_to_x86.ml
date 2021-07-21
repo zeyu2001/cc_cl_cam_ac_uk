@@ -279,9 +279,9 @@ let emit_x86 e =
 	  | PUSH (STACK_BOOL true)  -> cmd "pushq $1" "push true \n"
 	  | PUSH (STACK_BOOL false) -> cmd "pushq $0" "push false \n"
 	  | PUSH STACK_UNIT         -> cmd "pushq $0" "push false \n"
-	  | PUSH (STACK_HI i)       -> complain "Internal Error : Jargon code never explicitly pushes stack pointer"
-	  | PUSH (STACK_RA i)       -> complain "Internal Error : Jargon code never explicitly pushes return address"
-	  | PUSH (STACK_FP i)       -> complain "Internal Error : Jargon code never explicitly pushes frame pointer"
+	  | PUSH (STACK_HI _)       -> complain "Internal Error : Jargon code never explicitly pushes stack pointer"
+	  | PUSH (STACK_RA _)       -> complain "Internal Error : Jargon code never explicitly pushes return address"
+	  | PUSH (STACK_FP _)       -> complain "Internal Error : Jargon code never explicitly pushes frame pointer"
 	  | HALT                    -> complain "HALT found in Jargon code from Jargon.comp"
 
     in let rec emitl = function [] -> () | c::l -> (emitc c; emitl l)
