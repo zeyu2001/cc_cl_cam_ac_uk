@@ -31,14 +31,22 @@ let check (file, e) =
     let e' = try Static.check e 
              with Errors.Error s -> error file "static check" s 
     in let _ = peek "After static checks" e' Past.string_of_expr 
-    in e' 
+    in e'
 
 (* translate from Past.expr to Ast.expr *) 
-let translate e = 
+let translate e =
     let e' = Past_to_ast.translate_expr e
-    in let _ = peek "After translation" e' Ast.string_of_expr 
-    in e' 
+    in let _ = peek "After translation" e' Ast.string_of_expr
+    in e'
 
-(* the front end *)  
+(* the front end *)
 let front_end file = translate (check (parse (init_lexbuf file)))
-    
+
+(* front end reading directly from string *)
+let initstrbuf str =
+  let lexbuf = from_string str
+  in let _ = lexbuf.lex_curr_p <- { pos_fname = "input"; pos_lnum = 1; pos_bol = 0; pos_cnum = 0; }
+  in ("input", lexbuf)
+
+let front_end_from_string str = translate (check (parse (initstrbuf str)))
+
