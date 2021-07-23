@@ -7,74 +7,71 @@ function App() {
   const [volatileSource, setSource] = useState(defaultProgram);
   const [source] = useDebounce(volatileSource, 1000);
 
-  function handleEditorDidMount(editor, monaco) {
-    editorRef.current = editor; 
-  }
-
-//   if (editorRef.current !== null) {
-//     editorRef.current.deltaDecorations([], [
-//       { range: new monaco.Range(3,1,5,1), options: { isWholeLine: true, linesDecorationsClassName: 'myLineDecoration' }},
-//     ]);
-//   }
-
   return (
     <div className="App">
       <div className="editorWrapper">
-        <h>Slang</h>
+        <h4>Slang</h4>
         <Editor
           className="editor"
-          height="100vh"
-          defaultLanguage="javascript"
           defaultValue={source}
           onChange={(value, event) => value === undefined ? setSource("") : setSource(value)}
           options={{theme: "vs-dark"}}
         />
       </div>
       <div className="editorWrapper">
-        <h>Interpreter 2</h>
+        <h4>Interpreter 2</h4>
         <Editor
-          height="100vh"
           className="editor"
           defaultLanguage="javascript"
           defaultValue="// some comment"
-          value={clean(slang.interp2(source))}
-          options={{readOnly: true}}
+          value={
+            //@ts-ignore
+            clean(slang.interp2(source))
+          }
+          options={{readOnly: true,
+                    theme: "vs-dark"}}
         />
       </div>
       <div className="editorWrapper">
-        <h>Interpreter 3</h>
+        <h4>Interpreter 3</h4>
          <Editor
-          height="100vh"
           className="editor"
           defaultLanguage="javascript"
           defaultValue="// some comment"
-          value={clean(slang.interp3(source))}
-          options={{readOnly: true}}
+          value={
+            //@ts-ignore
+            clean(slang.interp3(source))
+          }
+          options={{readOnly: true,
+                    theme: "vs-dark"}}
         />
       </div>
       <div className="editorWrapper">
-        <h>Jargon</h>
+        <h4>Jargon</h4>
         <Editor
-          height="100vh"
           defaultLanguage="javascript"
           className="editor"
           defaultValue="// some comment"
-          value={clean(slang.jargon(source))}
-          options={{readOnly: true}}
+          value={
+            //@ts-ignore
+            slang.jargon(source)
+          }
+          options={{readOnly: true,
+                    theme: "vs-dark"}}
         />
       </div>
     </div>
   );
 }
 
-const clean = s =>
+const clean = (s : string) =>
   s.split("\n")
-    // .map(s => s.replace(/^\t/, ''))
-    // .map(s => s.replace(/^\s/, ''))
-    // .map(s => s.replace(/\[/, ''))
-    // .map(s => s.replace(/\]/, ''))
-    // .map(s => s.replace(/\;/, ''))
-    // .filter(s => s !== "")
+    .map(s => s.replace(/^\t/, ''))
+    .map(s => s.replace(/^\s/, ''))
+    .map(s => s.replace(/^\[/, ''))
+    .map(s => s.replace(/\]$/, ''))
+    .map(s => s.replace(/;/, ''))
+    .filter(s => s !== "")
     .join("\n")
 
 const defaultProgram = `let fib( m : int) : int = 

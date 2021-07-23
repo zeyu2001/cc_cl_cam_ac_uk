@@ -1,25 +1,32 @@
 .App {
   text-align: center;
   display: flex;
-}
-
-.editor {
-  min-width: 300px;
+  overflow-y: hidden;
 }
 
 .editorWrapper {
   display: flex;
+  flex-grow: 1;
+  flex-shrink: 1;
   flex-direction: column;
   background-color: #1e1e1e;
   color: #d4d4d4;
+  min-width: 200px;
+  width: 25%;
 }
 
-h {
-  margin: 10px;
+section {
+  height: 92vh !important;
 }
 
-/* .myLineDecoration { */
-/* 	background: lightblue; */
-/* 	width: 5px !important; */
-/* 	margin-left: 3px; */
-/* } */
+.editor {
+  height: 92vh;
+}
+
+h4 {
+  margin: 0;
+  height: 8vh;
+  line-height: 8vh;
+  vertical-align: center;
+}
+
