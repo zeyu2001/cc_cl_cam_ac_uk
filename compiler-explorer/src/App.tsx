@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
 import Editor from "@monaco-editor/react";
 import './App.css';
@@ -6,6 +6,17 @@ import './App.css';
 function App() {
   const [volatileSource, setSource] = useState(defaultProgram);
   const [source] = useDebounce(volatileSource, 1000);
+
+  const [i2code, setI2code] = useState(i2(source));
+  const [i3code, setI3code] = useState(i3(source));
+  const [jargonCode, setJargonCode] = useState(jargon(source));
+
+  // Only run this if 'source' changes.
+  useEffect(() => {
+    setI2code(i2(source));
+    setI3code(i3(source));
+    setJargonCode(jargon(source));
+  }, [source])
 
   return (
     <div className="App">
@@ -24,10 +35,7 @@ function App() {
           className="editor"
           defaultLanguage="javascript"
           defaultValue="// some comment"
-          value={
-            //@ts-ignore
-            clean(slang.interp2(source))
-          }
+          value={i2code}
           options={{readOnly: true,
                     theme: "vs-dark"}}
         />
@@ -38,10 +46,7 @@ function App() {
           className="editor"
           defaultLanguage="javascript"
           defaultValue="// some comment"
-          value={
-            //@ts-ignore
-            clean(slang.interp3(source))
-          }
+          value={i3code}
           options={{readOnly: true,
                     theme: "vs-dark"}}
         />
@@ -52,10 +57,7 @@ function App() {
           defaultLanguage="javascript"
           className="editor"
           defaultValue="// some comment"
-          value={
-            //@ts-ignore
-            slang.jargon(source)
-          }
+          value={jargonCode}
           options={{readOnly: true,
                     theme: "vs-dark"}}
         />
@@ -63,6 +65,13 @@ function App() {
     </div>
   );
 }
+
+//@ts-ignore
+const i2 = (s : string) => clean(slang.interp2(s));
+//@ts-ignore
+const i3 = (s : string) => clean(slang.interp3(s));
+//@ts-ignore
+const jargon = (s : string) => slang.jargon(s);
 
 const clean = (s : string) =>
   s.split("\n")
