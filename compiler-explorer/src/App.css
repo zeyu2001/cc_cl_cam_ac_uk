@@ -15,12 +15,15 @@
   width: 25%;
 }
 
-section {
-  height: 92vh !important;
-}
-
 .editor {
   height: 92vh;
+}
+
+.resultBox {
+  height: 10vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 h4 {
@@ -30,3 +33,8 @@ h4 {
   vertical-align: center;
 }
 
+p {
+  text-align: left;
+  padding-left: 20px;
+  margin: 10px 0;
+}

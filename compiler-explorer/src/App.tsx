@@ -7,12 +7,14 @@ function App() {
   const [volatileSource, setSource] = useState(defaultProgram);
   const [source] = useDebounce(volatileSource, 1000);
 
+  const [result, setResult] = useState(interp(source));
   const [i2code, setI2code] = useState(i2(source));
   const [i3code, setI3code] = useState(i3(source));
   const [jargonCode, setJargonCode] = useState(jargon(source));
 
   // Only run this if 'source' changes.
   useEffect(() => {
+    setResult(interp(source));
     setI2code(i2(source));
     setI3code(i3(source));
     setJargonCode(jargon(source));
@@ -23,11 +25,15 @@ function App() {
       <div className="editorWrapper">
         <h4>Slang</h4>
         <Editor
-          className="editor"
+          height="82vh"
           defaultValue={source}
           onChange={(value, event) => value === undefined ? setSource("") : setSource(value)}
           options={{theme: "vs-dark"}}
         />
+        <div className="resultBox">
+          <p>Result</p>
+          <p>{result}</p>
+        </div>
       </div>
       <div className="editorWrapper">
         <h4>Interpreter 2</h4>
@@ -67,11 +73,13 @@ function App() {
 }
 
 //@ts-ignore
+const interp = (s : string) => slang.interp0(s);
+//@ts-ignore
 const i2 = (s : string) => clean(slang.interp2(s));
 //@ts-ignore
 const i3 = (s : string) => clean(slang.interp3(s));
 //@ts-ignore
-const jargon = (s : string) => slang.jargon(s);
+const jargon = (s : string) => removeEmptyLines(slang.jargon(s));
 
 const clean = (s : string) =>
   s.split("\n")
@@ -80,6 +88,11 @@ const clean = (s : string) =>
     .map(s => s.replace(/^\[/, ''))
     .map(s => s.replace(/\]$/, ''))
     .map(s => s.replace(/;/, ''))
+    .filter(s => s !== "")
+    .join("\n")
+
+const removeEmptyLines = (s : string) =>
+  s.split("\n")
     .filter(s => s !== "")
     .join("\n")
 
