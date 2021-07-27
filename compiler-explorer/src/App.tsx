@@ -1,16 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
-import Editor from "@monaco-editor/react";
+import Editor, { useMonaco } from "@monaco-editor/react";
+import languageDef from './LanguageDef'
+import samplePrograms from './SamplePrograms'
 import './App.css';
 
+const { fib } = samplePrograms;
+
 function App() {
-  const [volatileSource, setSource] = useState(defaultProgram);
+  const [volatileSource, setSource] = useState(fib);
   const [source] = useDebounce(volatileSource, 1000);
 
   const [result, setResult] = useState(interp(source));
   const [i2code, setI2code] = useState(i2(source));
   const [i3code, setI3code] = useState(i3(source));
   const [jargonCode, setJargonCode] = useState(jargon(source));
+
+  const monaco = useMonaco();
+
+  useEffect(() => {
+    monaco?.languages.register({id: 'Slang'});
+    monaco?.languages.setMonarchTokensProvider('Slang', languageDef);
+  }, [monaco]);
 
   // Only run this if 'source' changes.
   useEffect(() => {
@@ -27,6 +38,7 @@ function App() {
         <Editor
           height="82vh"
           defaultValue={source}
+          defaultLanguage="Slang"
           onChange={(value, event) => value === undefined ? setSource("") : setSource(value)}
           options={{theme: "vs-dark"}}
         />
@@ -96,15 +108,4 @@ const removeEmptyLines = (s : string) =>
     .filter(s => s !== "")
     .join("\n")
 
-const defaultProgram = `let fib( m : int) : int = 
-    if m = 0
-    then 1 
-    else if m = 1 
-         then 1 
-         else fib (m - 1) + fib (m -2) 
-         end 
-    end 
-in 
-    fib(1) 
-end`
 export default App;
