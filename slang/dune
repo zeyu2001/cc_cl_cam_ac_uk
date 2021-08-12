@@ -1,0 +1,24 @@
+(ocamlyacc parser)
+(ocamllex lexer)
+(library
+  (name slang)
+  (public_name slang)
+  (modules
+    Front_end
+    Interp_0
+    Interp_1
+    Interp_2
+    Interp_3
+    Jargon
+    Ast
+    Past
+    Errors
+    Option
+    Free_vars
+    Pptree
+    Parser
+    Lexer
+    Static
+    Past_to_ast)
+)
+

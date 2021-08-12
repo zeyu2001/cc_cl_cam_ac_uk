@@ -167,7 +167,7 @@ let assign (heap, i) a v =
 
 
 (* update : (env * binding) -> env *) 
-let update(env, (x, v)) = (x, v) :: env 
+(* let update(env, (x, v)) = (x, v) :: env *)
 
 let mk_fun(c, env) = CLOSURE(c, env) 
 let mk_rec(f, c, env) = CLOSURE(c, (f, REC_CLOSURE(c))::env)
@@ -241,7 +241,7 @@ let step = function
 
 (* (code stack,         value/env stack, state) -> (code stack,  value/env stack, state) *) 
  | ((PUSH v) :: ds,                        evs, s) -> (ds, (V v) :: evs, s)
- | (POP :: ds,                        e :: evs, s) -> (ds, evs, s) 
+ | (POP :: ds,                        _ :: evs, s) -> (ds, evs, s) 
  | (SWAP :: ds,                e1 :: e2 :: evs, s) -> (ds, e2 :: e1 :: evs, s) 
  | ((BIND x) :: ds,               (V v) :: evs, s) -> (ds, EV([(x, v)]) :: evs, s) 
  | ((LOOKUP x) :: ds,                      evs, s) -> (ds, V(search(evs, x)) :: evs, s)
@@ -252,14 +252,14 @@ let step = function
  | (SND :: ds,           V(PAIR (_, v)) :: evs, s) -> (ds, (V v) :: evs, s)
  | (MK_INL :: ds,                 (V v) :: evs, s) -> (ds, V(INL v) :: evs, s)
  | (MK_INR :: ds,                 (V v) :: evs, s) -> (ds, V(INR v) :: evs, s)
- | (CASE (c1,  _) :: ds,         V(INL v)::evs, s) -> (c1 @ ds, (V v) :: evs, s) 
- | (CASE ( _, c2) :: ds,         V(INR v)::evs, s) -> (c2 @ ds, (V v) :: evs, s) 
- | ((TEST(c1, c2)) :: ds,  V(BOOL true) :: evs, s) -> (c1 @ ds, evs, s) 
- | ((TEST(c1, c2)) :: ds, V(BOOL false) :: evs, s) -> (c2 @ ds, evs, s)
+ | (CASE (c1,  _) :: ds,       V(INL v) :: evs, s) -> (c1 @ ds, (V v) :: evs, s) 
+ | (CASE ( _, c2) :: ds,       V(INR v) :: evs, s) -> (c2 @ ds, (V v) :: evs, s) 
+ | ((TEST(c1, _)) :: ds,   V(BOOL true) :: evs, s) -> (c1 @ ds, evs, s) 
+ | ((TEST(_, c2)) :: ds,  V(BOOL false) :: evs, s) -> (c2 @ ds, evs, s)
  | (ASSIGN :: ds,  (V v) :: (V (REF a)) :: evs, s) -> (ds, V(UNIT) :: evs, assign s a v)
  | (DEREF :: ds,            (V (REF a)) :: evs, s) -> (ds, V(deref s a) :: evs, s)
  | (MK_REF :: ds,                 (V v) :: evs, s) -> let (a, s') = allocate s v in (ds, V(REF a) :: evs, s')
- | ((WHILE(c1, c2)) :: ds,V(BOOL false) :: evs, s) -> (ds, V(UNIT) :: evs, s) 
+ | ((WHILE(_, _)) :: ds,  V(BOOL false) :: evs, s) -> (ds, V(UNIT) :: evs, s) 
  | ((WHILE(c1, c2)) :: ds, V(BOOL true) :: evs, s) -> (c2 @ [POP] @ c1 @ [WHILE(c1, c2)] @ ds, evs, s)
  | ((MK_CLOSURE c) :: ds,                  evs, s) -> (ds,  V(mk_fun(c, evs_to_env evs)) :: evs, s)
  | (MK_REC(f, c) :: ds,                    evs, s) -> (ds,  V(mk_rec(f, c, evs_to_env evs)) :: evs, s)

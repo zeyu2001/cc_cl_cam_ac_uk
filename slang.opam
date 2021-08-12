@@ -1,0 +1,14 @@
+opam-version: "2.0"
+name: "slang"
+version: "1.0"
+synopsis: "Toy compiler for the slang language"
+description: """
+A compiler used for lectures in the compiler construction course in Cambridge University.
+"""
+maintainer: "Jeremy Yallop"
+authors: ""
+license: ""
+homepage: ""
+bug-reports: ""
+dev-repo: ""
+depends: [ "ocaml" "ocamlfind" ]

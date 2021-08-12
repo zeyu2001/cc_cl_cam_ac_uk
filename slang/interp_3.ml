@@ -79,7 +79,7 @@ type env_value_stack = env_or_value list
 type state = address * env_value_stack 
 
 (* update : (env * binding) -> env *) 
-let update(env, (x, v)) = (x, v) :: env 
+(* let update(env, (x, v)) = (x, v) :: env *)
 
 let rec lookup (env, x) = 
     match env with 
@@ -230,7 +230,7 @@ let do_oper = function
 let step (cp, evs) = 
  match (get_instruction cp, evs) with 
  | (PUSH v,                            evs) -> (cp + 1, (V v) :: evs)
- | (POP,                          s :: evs) -> (cp + 1, evs) 
+ | (POP,                          _ :: evs) -> (cp + 1, evs) 
  | (SWAP,                  s1 :: s2 :: evs) -> (cp + 1, s2 :: s1 :: evs) 
  | (BIND x,                   (V v) :: evs) -> (cp + 1, EV([(x, v)]) :: evs) 
  | (LOOKUP x,                          evs) -> (cp + 1, V(search(evs, x)) :: evs)
@@ -255,7 +255,7 @@ let step (cp, evs) =
                                             -> (i, (V v) :: (EV env) :: (RA (cp + 1)) :: evs)
 (* new intructions *) 
  | (RETURN,    (V v) :: _ :: (RA i) :: evs) -> (i, (V v) :: evs) 
- | (LABEL l,                           evs) -> (cp + 1, evs) 
+ | (LABEL _,                           evs) -> (cp + 1, evs) 
  | (HALT,                              evs) -> (cp, evs) 
  | (GOTO (_, Some i),                  evs) -> (i, evs) 
  | _ -> complain ("step : bad state = " ^ (string_of_state (cp, evs)) ^ "\n")

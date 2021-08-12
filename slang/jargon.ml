@@ -94,12 +94,12 @@ let stack_top vm = Array.get vm.stack (vm.sp - 1)
 
 (********************** Printing ********************************) 
 
-let string_of_list sep f l = 
+(* let string_of_list sep f l = 
    let rec aux f = function 
      | [] -> ""
      | [t] -> (f t)
      | t :: rest -> (f t) ^  sep  ^ (aux f rest)
-   in "[" ^ (aux f l) ^ "]"
+   in "[" ^ (aux f l) ^ "]" *)
 
 let string_of_status = function 
   | Halted               -> "halted" 
@@ -217,7 +217,7 @@ let rec string_of_heap_value a vm =
   | HEAP_UNIT       -> "()"
   | HEAP_HI i       -> string_of_heap_value i vm 
   | HEAP_CI _       -> Errors.complain "string_of_heap_value: expecting value in heap, found code index"
-  | HEAP_HEADER (i, ht) -> 
+  | HEAP_HEADER (_, ht) -> 
     (match ht with 
     | HT_PAIR -> "(" ^ (string_of_heap_value (a + 1) vm) ^ ", " ^ (string_of_heap_value (a + 2) vm) ^ ")"
     | HT_INL -> "inl(" ^ (string_of_heap_value (a + 1) vm) ^ ")" 
@@ -248,7 +248,7 @@ let stack_to_heap_item = function
   | STACK_UNIT -> HEAP_UNIT 
   | STACK_HI i -> HEAP_HI i 
   | STACK_RA i -> HEAP_CI i 
-  | STACK_FP i -> Errors.complain "stack_to_heap_item: no frame pointer allowed on heap" 
+  | STACK_FP _ -> Errors.complain "stack_to_heap_item: no frame pointer allowed on heap" 
 
 let heap_to_stack_item = function 
   | HEAP_INT i -> STACK_INT i
@@ -323,7 +323,7 @@ let perform_unary(op, vm) =
    None = no progress 
    Some(vm') = progress made, resulting in vm'
 *) 
-let invoke_garbage_collection vm  = None 
+let invoke_garbage_collection _  = None 
 
 let allocate(n, vm) = 
     let hp1 = vm.hp in 
@@ -412,7 +412,7 @@ let deref vm =
 
 let assign vm = 
     let (c1, vm1) = pop_top vm in 
-    let (c2, vm2) = pop_top vm1 in 
+    let (c2, _) = pop_top vm1 in 
     match c2 with 
     | STACK_HI a ->
         if vm.sp < vm.heap_bound 
@@ -467,7 +467,7 @@ let apply vm =
         | HEAP_CI i -> 
           let new_fp = vm.sp 
           in let saved_fp = STACK_FP vm.fp
-          in let return_index = STACK_RA (vm.cp + 1) 
+          in let return_index = STACK_RA (vm.cp + 1)
           in let new_vm = { vm with cp = i; fp = new_fp }
           in push(return_index, push(saved_fp, new_vm ))
         | _ -> Errors.complain "apply: runtime error, expecting code index in heap") 
@@ -483,23 +483,23 @@ let step vm =
   | SND               -> advance_cp (do_snd vm)
   | MK_INL            -> advance_cp (mk_inl vm)
   | MK_INR            -> advance_cp (mk_inr vm)
-  | PUSH c            -> advance_cp (push(c, vm)) 
+  | PUSH c            -> advance_cp (push(c, vm))
 
-  | APPLY             -> apply vm 
+  | APPLY             -> apply vm
   | LOOKUP vp         -> advance_cp (lookup vm.fp vm vp)
-  | RETURN            -> return vm 
+  | RETURN            -> return vm
   | MK_CLOSURE(l, n)  -> advance_cp (mk_closure(l, n, vm))
 
   | SWAP              -> advance_cp (swap vm)
   | POP               -> advance_cp (pop (1, vm))
-  | LABEL l           -> advance_cp vm 
+  | LABEL _           -> advance_cp vm 
   | DEREF             -> advance_cp (deref vm)
   | MK_REF            -> advance_cp (mk_ref vm)
-  | ASSIGN            -> advance_cp(assign vm) 
-  | HALT              -> { vm with status = Halted } 
-  | GOTO (_, Some i)  -> goto(i, vm) 
-  | TEST (_, Some i)  -> test(i, vm) 
-  | CASE (_, Some i)  -> case(i, vm) 
+  | ASSIGN            -> advance_cp(assign vm)
+  | HALT              -> { vm with status = Halted }
+  | GOTO (_, Some i)  -> goto(i, vm)
+  | TEST (_, Some i)  -> test(i, vm)
+  | CASE (_, Some i)  -> case(i, vm)
 
   | _ -> Errors.complain ("step : bad state = " ^ (string_of_state vm) ^ "\n")
 
