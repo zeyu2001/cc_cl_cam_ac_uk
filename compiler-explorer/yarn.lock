@@ -2,6 +2,49 @@
 # yarn lockfile v1
 
 
+"@atlaskit/analytics-next-stable-react-context@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@atlaskit/analytics-next-stable-react-context/-/analytics-next-stable-react-context-1.0.1.tgz#93c4c7a1a35f4ab606d727af443f49f0842fd96f"
+  integrity sha512-iO6+hIp09dF4iAZQarVz3vKY1kM5Ij5CExYcK9jgc2q+OH8nv8n+BPFeJTdzGOGopmbUZn5Opj9pYQvge1Gr4Q==
+  dependencies:
+    tslib "^2.0.0"
+
+"@atlaskit/analytics-next@^8.0.0":
+  version "8.2.1"
+  resolved "https://registry.yarnpkg.com/@atlaskit/analytics-next/-/analytics-next-8.2.1.tgz#643278999bb1923d7532c3977d23cf3624bacc93"
+  integrity sha512-/c68oHIvEKD8t9xRFj24Lv8ys6CpWePsbK7kdQnwdfsGnnRJ9ZkoBEHt+C5tiCM6QA1SJEphjhnlo/xXXALuCw==
+  dependencies:
+    "@atlaskit/analytics-next-stable-react-context" "1.0.1"
+    "@babel/runtime" "^7.0.0"
+    prop-types "^15.5.10"
+    use-memo-one "^1.1.1"
+
+"@atlaskit/progress-indicator@^9.0.5":
+  version "9.0.5"
+  resolved "https://registry.yarnpkg.com/@atlaskit/progress-indicator/-/progress-indicator-9.0.5.tgz#e3901db99e8c8d309eed085901a5d5bfc5e79484"
+  integrity sha512-Hku1oOz+d+NftzCVcdEx5pZGAYGwAoDz9YaR/q0dLigQvLd4bsoFfvntwyoCBmL+fCzKf60RndpcU4apnL9oYg==
+  dependencies:
+    "@atlaskit/analytics-next" "^8.0.0"
+    "@atlaskit/theme" "^11.3.0"
+    "@babel/runtime" "^7.0.0"
+
+"@atlaskit/theme@^11.3.0":
+  version "11.4.1"
+  resolved "https://registry.yarnpkg.com/@atlaskit/theme/-/theme-11.4.1.tgz#3427ad9105b1fdc228876ec78ed469306ec6a2c4"
+  integrity sha512-AB7yifnI703XgmxmqhQXClUuaBs16PUxqCnC63N6/Io2SZVdQiGA0dkV55QmUahhpPljToj3fONFhA5BEsYsDw==
+  dependencies:
+    "@atlaskit/tokens" "^0.0.18"
+    "@babel/runtime" "^7.0.0"
+    exenv "^1.2.2"
+    prop-types "^15.5.10"
+
+"@atlaskit/tokens@^0.0.18":
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/@atlaskit/tokens/-/tokens-0.0.18.tgz#4e5798659036190225f1b401a699cea6c0f0235a"
+  integrity sha512-KeCCSSm5UXgcKnTOMN2N4KFcmAV/JG20YUbhuKZiVX6iv0GeO6d/aGAGX0PiaZoGVV1JiAlA11WMRiEQJWMLSg==
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+
 "@babel/code-frame@7.10.4":
   version "7.10.4"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.10.4.tgz#168da1a36e90da68ae8d49c0f1b48c7c6249213a"
@@ -1368,6 +1411,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.0.0":
+  version "7.15.3"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.15.3.tgz#2e1c2880ca118e5b2f9988322bd8a7656a32502b"
+  integrity sha512-OvwMLqNXkCXSz1kSm58sEsNuhqOx/fKpnUnKnFB5v8uDda5bLNEHNgKPvhDN6IU0LDcnHQ90LlJ0Q6jnyBSIBA==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.5.5", "@babel/runtime@^7.9.2":
   version "7.14.8"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.14.8.tgz#7119a56f421018852694290b9f9148097391b446"
@@ -2027,6 +2077,11 @@
   resolved "https://registry.yarnpkg.com/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
   integrity sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==
 
+"@types/cytoscape@*", "@types/cytoscape@^3.14.17":
+  version "3.14.17"
+  resolved "https://registry.yarnpkg.com/@types/cytoscape/-/cytoscape-3.14.17.tgz#20eaa183e8b0509d6d38e80600e9ff25d70f607b"
+  integrity sha512-0s/bNVEgaxNDh9xZvke1vg7eZcPPM8UuBIuks0/tOjMTRnL4F1b7/yNaVCNY3gXpIWStaqH31k1CI7cyeP9Wkw==
+
 "@types/eslint@^7.2.6":
   version "7.28.0"
   resolved "https://registry.yarnpkg.com/@types/eslint/-/eslint-7.28.0.tgz#7e41f2481d301c68e14f483fe10b017753ce8d5a"
@@ -2152,6 +2207,14 @@
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
   integrity sha512-ce5d3q03Ex0sy4R14722Rmt6MT07Ua+k4FwDfdcToYJcMKNtRVQvJ6JCAPdAmAnbRb6CsX6aYb9m96NGod9uTw==
+
+"@types/react-cytoscapejs@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@types/react-cytoscapejs/-/react-cytoscapejs-1.2.2.tgz#e2d27dc11b2bac61fd3e64efe2004ab65958344f"
+  integrity sha512-Z+CeQLw4XyQOrS/SdbcUCdYfWqYmaPS/WT+gNy33KYR09BtVzekx1jeNU5kNDvXCv8/8jGlhSrSk0uO7ocGuFg==
+  dependencies:
+    "@types/cytoscape" "*"
+    "@types/react" "*"
 
 "@types/react-dom@^17.0.0":
   version "17.0.9"
@@ -4283,6 +4346,21 @@ cyclist@^1.0.1:
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
+cytoscape-klay@^3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/cytoscape-klay/-/cytoscape-klay-3.1.4.tgz#0e5bbb5c482b384b2ff2485150173aaecebc324b"
+  integrity sha512-VwPj0VR25GPfy6qXVQRi/MYlZM/zkdvRhHlgqbM//lSvstgM6fhp3ik/uM8Wr8nlhskfqz/M1fIDmR6UckbS2A==
+  dependencies:
+    klayjs "^0.4.1"
+
+cytoscape@^3.19.1, cytoscape@^3.2.19:
+  version "3.19.1"
+  resolved "https://registry.yarnpkg.com/cytoscape/-/cytoscape-3.19.1.tgz#034fb5e5de7e6b9b7c948a48da8ab7037d430f69"
+  integrity sha512-fQSymoCzmDF5dejZqv94WXQUnI3cVZfaHWFQR+Q9RhJ6LzEs7dtkwgFYaoklsbXcrXz0uCGx4i3vQ0FiuOUu9Q==
+  dependencies:
+    heap "^0.2.6"
+    lodash.debounce "^4.0.8"
+
 d@1, d@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/d/-/d-1.0.1.tgz#8698095372d58dbee346ffd0c7093f99f8f9eb5a"
@@ -5206,6 +5284,11 @@ execa@^4.0.0:
     signal-exit "^3.0.2"
     strip-final-newline "^2.0.0"
 
+exenv@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/exenv/-/exenv-1.2.2.tgz#2ae78e85d9894158670b03d47bec1f03bd91bb9d"
+  integrity sha1-KueOhdmJQVhnCwPUe+wfA72Ru50=
+
 exit@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/exit/-/exit-0.1.2.tgz#0632638f8d877cc82107d30a0fff1a17cba1cd0c"
@@ -5877,6 +5960,11 @@ he@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
+
+heap@^0.2.6:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/heap/-/heap-0.2.6.tgz#087e1f10b046932fc8594dd9e6d378afc9d1e5ac"
+  integrity sha1-CH4fELBGky/IWU3Z5tN4r8nR5aw=
 
 hex-color-regex@^1.1.0:
   version "1.1.0"
@@ -7284,6 +7372,11 @@ kind-of@^6.0.0, kind-of@^6.0.2:
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.3.tgz#07c05034a6c349fa06e24fa35aa76db4580ce4dd"
   integrity sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
+
+klayjs@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/klayjs/-/klayjs-0.4.1.tgz#5bf9fadc7a3e44b94082bba501e7d803076dcfc2"
+  integrity sha1-W/n63Ho+RLlAgrulAefYAwdtz8I=
 
 kleur@^3.0.3:
   version "3.0.3"
@@ -9371,7 +9464,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.4"
 
-prop-types@^15.7.2:
+prop-types@^15.5.10, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -9541,6 +9634,14 @@ react-app-polyfill@^2.0.0:
     raf "^3.4.1"
     regenerator-runtime "^0.13.7"
     whatwg-fetch "^3.4.1"
+
+react-cytoscapejs@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-cytoscapejs/-/react-cytoscapejs-1.2.1.tgz#ccce46acabf4f0c41dce9070743854f92b0dc050"
+  integrity sha512-8exVCetpzyGCAKuRjXPWGjFCnb22boZ3SXUPpPB/+wQI8Q8BwkT1URN3A7J1Czvj1qAbShh5QQ514mBUp7i7kw==
+  dependencies:
+    cytoscape "^3.2.19"
+    prop-types "^15.6.2"
 
 react-dev-utils@^11.0.3:
   version "11.0.4"
@@ -11204,6 +11305,11 @@ tslib@^1.10.0, tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.11.1.tgz#eb15d128827fbee2841549e171f45ed338ac7e35"
   integrity sha512-aZW88SY8kQbU7gpV19lN24LtXh/yD4ZZg6qieAJDDg+YBsJcSmLGK9QpnUjAKVG/xefmvJGd1WUmfpT/g6AJGA==
 
+tslib@^2.0.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.0.tgz#803b8cdab3e12ba581a4ca41c8839bbb0dacb09e"
+  integrity sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==
+
 tsutils@^3.17.1:
   version "3.17.1"
   resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-3.17.1.tgz#ed719917f11ca0dee586272b2ac49e015a2dd759"
@@ -11463,6 +11569,11 @@ use-debounce@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-7.0.0.tgz#00a67d23d4fe09905e11145a99278da06c01c880"
   integrity sha512-4fvxEEs7ztdNMh+c497HAgysdq2+Ascem6EaDANGlCIap1JzqfL03Xw8xkYc2lShfXm4uO6PA6V5zcXN7gJdFA==
+
+use-memo-one@^1.1.1:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/use-memo-one/-/use-memo-one-1.1.2.tgz#0c8203a329f76e040047a35a1197defe342fab20"
+  integrity sha512-u2qFKtxLsia/r8qG0ZKkbytbztzRb317XCkT7yP8wxL0tZ/CzK2G+WWie5vWvpyeP7+YoPIwbJoIHJ4Ba4k0oQ==
 
 use@^3.1.0:
   version "3.1.1"
