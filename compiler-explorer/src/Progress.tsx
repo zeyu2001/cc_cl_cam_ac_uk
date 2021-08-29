@@ -2,6 +2,26 @@ import { ProgressIndicator } from "@atlaskit/progress-indicator";
 import "./Stacks.css";
 import { useKeypress } from "./util";
 
+export function keyHandler(
+  index: number,
+  setIndex: (i: number) => void,
+  size: number
+) {
+  const inc = () => setIndex((((index + 1) % size) + size) % size);
+  const dec = () => setIndex((((index - 1) % size) + size) % size);
+
+  return (key: string) => {
+    switch (key) {
+      case "ArrowRight":
+        inc();
+        break;
+      case "ArrowLeft":
+        dec();
+        break;
+    }
+  };
+}
+
 const Progress = ({
   values,
   index,
@@ -16,16 +36,10 @@ const Progress = ({
   const inc = () => setIndex((((index + 1) % n) + n) % n);
   const dec = () => setIndex((((index - 1) % n) + n) % n);
 
-  useKeypress(["ArrowRight", "ArrowLeft"], (e: KeyboardEvent) => {
-    switch (e.key) {
-      case "ArrowRight":
-        inc();
-        break;
-      case "ArrowLeft":
-        dec();
-        break;
-    }
-  });
+  const handler = keyHandler(index, setIndex, n);
+  useKeypress(["ArrowRight", "ArrowLeft"], (e: KeyboardEvent) =>
+    handler(e.key)
+  );
 
   return (
     <div className="progress">

@@ -62,7 +62,6 @@ function App() {
   const monaco = useMonaco();
 
   useEffect(() => {
-    console.log(monaco);
     monaco?.editor.setTheme("vs-dark");
     monaco?.languages.register({ id: "Slang" });
     monaco?.languages.setMonarchTokensProvider("Slang", languageDef);
