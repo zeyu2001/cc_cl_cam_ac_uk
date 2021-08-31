@@ -20,9 +20,9 @@ open Ast
 
 let complain = Errors.complain
 
-type address = int 
+type address = int [@@deriving yojson]
 
-type var = string 
+type var = string [@@deriving yojson]
 
 type value = 
      | REF of address 
@@ -33,7 +33,7 @@ type value =
      | INL of value 
      | INR of value 
      | CLOSURE of closure    
-     | REC_CLOSURE of code
+     | REC_CLOSURE of code [@@deriving yojson]
 
 and closure = code * env 
 
@@ -66,15 +66,15 @@ and binding = var * value
 
 and env = binding list
 
-type env_or_value = EV of env | V of value 
+type env_or_value = EV of env | V of value [@@deriving yojson]
 
-type env_value_stack = env_or_value list
+type env_value_stack = env_or_value list [@@deriving yojson]
 
 (* This is the the slang program state --- that is, values for references *) 
 (* It is an array of referenced values together with next unallocated address *)
-type state = (value array) * int 
+type state = (value array) * int [@@deriving yojson]
 
-type interp_state = code * env_value_stack * state 
+type interp_state = code * env_value_stack * state [@@deriving yojson]
 
 (* Printing *) 
 

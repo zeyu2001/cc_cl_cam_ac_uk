@@ -102,6 +102,20 @@ val interpret : Ast.expr -> vm_state
 
 val string_of_listing : listing -> string 
 
+val string_of_stack_item : stack_item -> string 
+
+val string_of_status : status_code -> string 
+
+val string_of_heap_item : heap_item -> string 
+
+val string_of_heap_type : heap_type -> string 
+
+val string_of_instruction : instruction -> string 
+
 val string_of_value : vm_state -> string 
 
-val reset : Unit.t -> Unit.t
+val reset : unit -> unit
+
+val first_frame : vm_state -> vm_state
+
+val initial_state : instruction list -> vm_state

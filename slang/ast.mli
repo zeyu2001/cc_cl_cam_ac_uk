@@ -1,9 +1,9 @@
 
 type var = string 
 
-type oper = ADD | MUL | DIV | SUB | LT | AND | OR | EQB | EQI
+type oper = ADD | MUL | DIV | SUB | LT | AND | OR | EQB | EQI [@@deriving yojson]
 
-type unary_oper = NEG | NOT | READ 
+type unary_oper = NEG | NOT | READ [@@deriving yojson]
 
 type expr = 
        | Unit  

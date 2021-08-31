@@ -59,17 +59,29 @@ type state = address * env_value_stack
 
 val installed : (instruction array) ref
 
+val load : instruction list -> instruction array
+
 val step : state -> state 
 
 val compile : Ast.expr -> code  
 
+val heap : value array
+
+val next_address : address ref
+
 val driver : int -> state -> value 
+
+val get_instruction : address -> instruction
 
 val interpret : Ast.expr -> value 
 
 val string_of_code : code -> string 
 
 val string_of_value : value -> string 
+
+val string_of_env_or_value : env_or_value -> string
+
+val string_of_installed_code : unit -> string
 
 val reset : Unit.t -> Unit.t
 
