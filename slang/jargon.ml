@@ -576,9 +576,9 @@ let run l =
 
 (* COMPILE *) 
 
+let label_ref = ref 0
 let new_label = 
-    let i = ref 0 in 
-    let get () = let v = !i in (i := (!i) + 1; "L"^ (string_of_int v))
+    let get () = let v = !label_ref in (label_ref := (!label_ref) + 1; "L"^ (string_of_int v))
     in get 
 
 (*
@@ -716,4 +716,4 @@ let compile e =
 
 let interpret e = run (compile e)
 
-		     
+let reset = fun _ -> label_ref := 0

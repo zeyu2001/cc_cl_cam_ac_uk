@@ -104,3 +104,4 @@ val string_of_listing : listing -> string
 
 val string_of_value : vm_state -> string 
 
+val reset : Unit.t -> Unit.t

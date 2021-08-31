@@ -262,9 +262,9 @@ let step (cp, evs) =
 
 (* COMPILE *) 
 
+let label_ref = ref 0
 let new_label = 
-    let i = ref 0 in 
-    let get () = let v = !i in (i := (!i) + 1; "L"^ (string_of_int v))
+    let get () = let v = !label_ref in (label_ref := (!label_ref) + 1; "L"^ (string_of_int v))
     in get 
 
 let rec comp = function 
@@ -431,9 +431,5 @@ let interpret e =
     (* set the code pointer to 0 *) 
     in driver 1 (0 , [])
 
+let reset = fun _ -> next_address := 0; label_ref := 0; Array.fill heap 0 (Array.length heap) (INT 0)
 
-    
-
-      
-    
-    

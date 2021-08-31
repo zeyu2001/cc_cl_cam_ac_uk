@@ -22,6 +22,3 @@ val interpret :  Ast.expr * env * store -> (value * store)
 
 val interpret_top_level : Ast.expr -> value 
 
-
-
-

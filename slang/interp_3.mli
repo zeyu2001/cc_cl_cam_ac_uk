@@ -71,3 +71,5 @@ val string_of_code : code -> string
 
 val string_of_value : value -> string 
 
+val reset : Unit.t -> Unit.t
+
