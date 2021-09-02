@@ -1,0 +1,52 @@
+.App {
+  text-align: center;
+  display: flex;
+  color: #d4d4d4;
+  overflow-y: hidden;
+}
+
+button {
+  color: #3dc9b0;
+  border-style: solid;
+  background-color: transparent;
+  border-color: #3dc9b0;
+  border-radius: 5px;
+  border-width: 1px;
+  margin: 10px;
+}
+
+.editorWrapper {
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-direction: column;
+  background-color: #1e1e1e;
+  min-width: 200px;
+  width: 25%;
+}
+
+.resultBox {
+  height: 6vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h4 {
+  margin: 0;
+  height: 8vh;
+  line-height: 8vh;
+  vertical-align: center;
+}
+
+h3 {
+  margin: 0;
+  padding: 5px 0 5px 20px;
+  text-align: left;
+}
+
+p {
+  text-align: left;
+  padding-left: 20px;
+  margin: 10px 0;
+}

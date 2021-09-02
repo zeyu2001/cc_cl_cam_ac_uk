@@ -1,0 +1,86 @@
+.interpreter {
+  background-color: #1e1e1e;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+}
+
+.interpreterEditors {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  width: 100%;
+  height: 90%;
+}
+
+.interpreterTitle {
+  height: 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  padding: 0 10px 0 10px;
+}
+
+.interpreterTitle > h3 {
+  text-overflow: ellipsis;
+  line-height: 100%;
+  white-space: nowrap;
+  width: 50%;
+  overflow: hidden;
+  padding-top: 0;
+}
+
+.currentLineDec {
+  color: rgb(247, 47, 93);
+  width: 100% !important;
+  margin-left: 3px;
+}
+
+.currentLineDec::before {
+  content: ">>>";
+}
+
+.framePointerDec {
+  color: rgb(247, 47, 93);
+  width: 100% !important;
+  margin-left: 3px;
+}
+
+.framePointerDec::before {
+  content: "fp>";
+}
+
+.heapPointerDec {
+  color: rgb(247, 217, 47);
+  width: 100% !important;
+  margin-left: 3px;
+}
+
+.heapPointerDec::before {
+  content: ">";
+}
+
+.jargonMem {
+  width: 33%;
+  display: flex;
+  flex-direction: column;
+}
+
+.progress {
+  height: 5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  width: 100%;
+}
+
+.progress > div {
+  max-width: 90%;
+}
+
+/* fix for graph layout */
+#heap canvas {
+  left: 0;
+}
