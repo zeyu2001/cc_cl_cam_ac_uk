@@ -1,4 +1,3 @@
-import Editor from "@monaco-editor/react";
 import { useState, useRef, useEffect } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import Cytoscape from "cytoscape";
@@ -6,7 +5,8 @@ import Cytoscape from "cytoscape";
 import klay from "cytoscape-klay";
 import { useDebouncedCallback } from "use-debounce";
 
-import Progress from "./Progress";
+import Progress, { keyHandler } from "./Progress";
+import Editor from "./Editor";
 import "./Stacks.css";
 
 Cytoscape.use(klay);
@@ -123,6 +123,12 @@ const InterpreterJargon = ({
       ])
     );
   };
+
+  const handler = keyHandler(step, setStep, stepsList.length);
+  const handlerRef = useRef(handler);
+  useEffect(() => {
+    handlerRef.current = handler;
+  }, [handler]);
 
   const envEditorDidMount = (editor: any, monaco: any) => {
     envEditorRef.current = editor;
@@ -290,6 +296,7 @@ const InterpreterJargon = ({
           width="33%"
           language="javascript"
           onMount={codeEditorDidMount}
+          onKeyDown={(e) => handlerRef.current(e.key)}
           options={{
             readOnly: true,
             lineNumbers: (lineNumber: number) => (lineNumber - 1).toString(),
@@ -301,6 +308,7 @@ const InterpreterJargon = ({
           language="javascript"
           width="33%"
           onMount={envEditorDidMount}
+          onKeyDown={(e) => handlerRef.current(e.key)}
           options={{
             readOnly: true,
             lineNumbers: (lineNumber: number) =>
@@ -315,6 +323,7 @@ const InterpreterJargon = ({
               height="50%"
               onMount={heapEditorDidMount}
               language="javascript"
+              onKeyDown={(e) => handlerRef.current(e.key)}
               options={{
                 readOnly: true,
                 lineNumbers: (lineNumber: number) =>

@@ -1,8 +1,7 @@
-import Editor from "@monaco-editor/react";
 import { useState, useRef, useEffect } from "react";
 
-import Progress from "./Progress";
-
+import Progress, { keyHandler } from "./Progress";
+import Editor from "./Editor";
 import "./Stacks.css";
 
 type Code = string;
@@ -77,6 +76,12 @@ const Interpreter3 = ({
     }
   }, [step, currentInst, setDecorations]);
 
+  const handler = keyHandler(step, setStep, stepList.length);
+  const handlerRef = useRef(handler);
+  useEffect(() => {
+    handlerRef.current = handler;
+  }, [handler]);
+
   return (
     <div className="interpreter">
       <div className="interpreterTitle">
@@ -90,6 +95,7 @@ const Interpreter3 = ({
           value={installedCode}
           language="javascript"
           onMount={codeEditorDidMount}
+          onKeyDown={(e) => handlerRef.current(e.key)}
           options={{
             readOnly: true,
             lineNumbers: (lineNumber: number) => (lineNumber - 1).toString(),
@@ -99,6 +105,7 @@ const Interpreter3 = ({
         <Editor
           value={envStackS}
           language="javascript"
+          onKeyDown={(e) => handlerRef.current(e.key)}
           options={{
             readOnly: true,
             lineNumbers: (lineNumber: number) =>
@@ -109,6 +116,8 @@ const Interpreter3 = ({
         {showMem ? (
           <Editor
             value={memoryS}
+            language="javascript"
+            onKeyDown={(e) => handlerRef.current(e.key)}
             options={{
               readOnly: true,
               lineNumbers: (lineNumber: number) => (lineNumber - 1).toString(),
