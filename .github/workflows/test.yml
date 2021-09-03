@@ -35,6 +35,6 @@ jobs:
         with:
           ocaml-compiler: ${{ matrix.ocaml-compiler }}
 
-      - run: opam install ocamlbuild
+      - run: opam install dune ppx_yojson_conv js_of_ocaml js_of_ocaml-ppx
 
-      - run: cd slang && opam exec -- ocamlbuild slang.native
+      - run: opam exec -- dune build
