@@ -55,3 +55,4 @@ val eval : expr_i1 * env -> value
 
 val interpret : 'a Ast.expr -> value
 
+val string_of_value : value -> string
