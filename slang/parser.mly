@@ -45,7 +45,7 @@ start:
     e1 - e2  (is the e1(-e2) or e1-e2???) 
 */
 
-simple_expr:
+simple_expr: /* alternate name: expr2 */
 | UNIT                               { Past.Unit (get_loc())}
 | INT                                { Past.Integer (get_loc(), $1) }
 | WHAT                               { Past.What (get_loc())} 
@@ -54,39 +54,49 @@ simple_expr:
 | FALSE                              { Past.Boolean (get_loc(), false)}
 | LPAREN expr RPAREN                 { $2 }
 | LPAREN expr COMMA expr RPAREN      { Past.Pair(get_loc(), $2, $4) }
-| NOT simple_expr               { Past.UnaryOp(get_loc(), Past.NOT, $2) }
-| BANG simple_expr              { Past.Deref(get_loc(), $2) }
-| REF simple_expr               { Past.Ref(get_loc(), $2) }
+| NOT simple_expr                    { Past.UnaryOp(get_loc(), Past.NOT, $2) }
+| BANG simple_expr                   { Past.Deref(get_loc(), $2) }
+| REF simple_expr                    { Past.Ref(get_loc(), $2) }
+
+/*
+    expr1 binds more tightly than expr, so
+    (fun (x: int) -> x + x) 2 
+    parses as: (fun (x: int) -> (x + x)) 2
+    NOT: ((fun (x: int) -> x) + x) 2
+*/
+
+expr1:
+| simple_expr                        { $1 }
+| SUB expr1 %prec UNIT               { Past.UnaryOp(get_loc(), Past.NEG, $2) } 
+| expr1 ADD expr1                    { Past.Op(get_loc(), $1, Past.ADD, $3) }
+| expr1 SUB expr1                    { Past.Op(get_loc(), $1, Past.SUB, $3) }
+| expr1 MUL expr1                    { Past.Op(get_loc(), $1, Past.MUL, $3) }
+| expr1 DIV expr1                    { Past.Op(get_loc(), $1, Past.DIV, $3) }
+| expr1 LT expr1                     { Past.Op(get_loc(), $1, Past.LT, $3) }
+| expr1 EQUAL expr1                  { Past.Op(get_loc(), $1, Past.EQ, $3) }
+| expr1 ANDOP expr1                  { Past.Op(get_loc(), $1, Past.AND, $3) }
+| expr1 OROP expr1                   { Past.Op(get_loc(), $1, Past.OR, $3) }
+| expr1 ASSIGN expr1                 { Past.Assign(get_loc(), $1, $3) }
+| expr1 simple_expr                  { Past.App (get_loc(), $1, $2) } 
 
 expr:
-| simple_expr                        {  $1 }
-| expr simple_expr                   { Past.App (get_loc(), $1, $2) } 
-| SUB expr %prec UNIT                { Past.UnaryOp(get_loc(), Past.NEG, $2) } 
-| expr ADD expr                      { Past.Op(get_loc(), $1, Past.ADD, $3) }
-| expr SUB expr                      { Past.Op(get_loc(), $1, Past.SUB, $3) }
-| expr MUL expr                      { Past.Op(get_loc(), $1, Past.MUL, $3) }
-| expr DIV expr                      { Past.Op(get_loc(), $1, Past.DIV, $3) }
-| expr LT expr                       { Past.Op(get_loc(), $1, Past.LT, $3) }
-| expr EQUAL expr                    { Past.Op(get_loc(), $1, Past.EQ, $3) }
-| expr ANDOP expr                    { Past.Op(get_loc(), $1, Past.AND, $3) }
-| expr OROP expr                     { Past.Op(get_loc(), $1, Past.OR, $3) }
-| expr ASSIGN expr                   { Past.Assign(get_loc(), $1, $3) }
+| expr1                              { $1 }
 | BEGIN exprlist END                 { Past.Seq(get_loc(), $2) }
-| IF expr THEN expr ELSE expr END     { Past.If(get_loc(), $2, $4, $6) }
-| WHILE expr DO expr END              { Past.While(get_loc(), $2, $4) }
+| IF expr THEN expr ELSE expr        { Past.If(get_loc(), $2, $4, $6) }
+| WHILE expr DO expr                 { Past.While(get_loc(), $2, $4) }
 | FST expr %prec UMINUS              { Past.Fst(get_loc(), $2) }
 | SND expr %prec UMINUS              { Past.Snd(get_loc(), $2) }
 | INL texpr expr %prec UMINUS        { Past.Inl(get_loc(), $2, $3) }
 | INR texpr expr %prec UMINUS        { Past.Inr(get_loc(), $2, $3) }
-| FUN LPAREN IDENT COLON texpr RPAREN ARROW expr END 
-                                     { Past.Lambda(get_loc(), ($3, $5, $8)) } 
-| LET IDENT COLON texpr EQUAL expr IN expr END           { Past.Let (get_loc(), $2, $4, $6, $8) }
-| LET IDENT LPAREN IDENT COLON texpr RPAREN COLON texpr EQUAL expr IN expr END 
+| FUN LPAREN IDENT COLON texpr RPAREN ARROW expr
+                                     { Past.Lambda(get_loc(), ($3, $5, $8)) }
+| LET IDENT COLON texpr EQUAL expr IN expr
+                                     { Past.Let (get_loc(), $2, $4, $6, $8) }
+| LET IDENT LPAREN IDENT COLON texpr RPAREN COLON texpr EQUAL expr IN expr 
                                      { Past.LetFun (get_loc(), $2, ($4, $6, $11), $9, $13) }
 | CASE expr OF 
       INL LPAREN IDENT COLON texpr RPAREN ARROW expr 
-  BAR INR LPAREN IDENT COLON texpr RPAREN  ARROW expr 
-  END 
+  BAR INR LPAREN IDENT COLON texpr RPAREN  ARROW expr  
                                      { Past.Case (get_loc(), $2, ($6, $8, $11), ($15, $17, $20)) }
 
 exprlist:

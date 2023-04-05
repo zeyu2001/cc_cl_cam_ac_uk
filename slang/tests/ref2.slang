@@ -6,5 +6,4 @@ in begin
     x := (ref 101); 
     !!x 
    end 
-end 
 
