@@ -28,6 +28,7 @@ let get_loc = Parsing.symbol_start_pos
 %start start
 %type <Past.type_expr> texpr
 %type <Past.expr> simple_expr 
+%type <Past.expr> expr1 
 %type <Past.expr> expr 
 %type <Past.expr list> exprlist
 %type <Past.expr> start
