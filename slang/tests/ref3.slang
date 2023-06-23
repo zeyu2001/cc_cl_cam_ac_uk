@@ -6,5 +6,4 @@ in begin
     (!x) := 101; 
     !!x 
    end 
-end 
 
