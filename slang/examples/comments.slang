@@ -2,4 +2,4 @@
     allow multi-line comments
     (* as well as (*nested comments*)*)
 *)
-(fun (x : int) -> fun (y :int) -> x + y end end) 2 3
+(fun (x : int) -> fun (y :int) -> x + y) 2 3

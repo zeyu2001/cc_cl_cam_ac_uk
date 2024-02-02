@@ -1,4 +1,4 @@
-open Slang
+open Slanglib
 open Jargon
 open Ast
 

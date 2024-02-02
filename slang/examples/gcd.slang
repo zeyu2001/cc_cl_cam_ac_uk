@@ -7,8 +7,4 @@ let gcd(p : int * int) : int =
           else if m < n 
                then gcd(m, n - m)
                else gcd(m - n, n)
-               end 
-          end 
-       end 
-    end
-in gcd(?, ?) end 
+in gcd(?, ?)

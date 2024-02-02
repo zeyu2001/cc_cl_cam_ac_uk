@@ -5,6 +5,8 @@ University of Cambridge
 Timothy G. Griffin (tgg22@cam.ac.uk)
 *****************************************)
 
+open Slanglib
+
 (*  This is the main file. *)
 
 let error file action s = print_string ("\nERROR in " ^ file ^ " with " ^ action ^ " : " ^ s ^ "\n")

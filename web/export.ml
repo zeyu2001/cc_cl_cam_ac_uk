@@ -1,5 +1,5 @@
 open Js_of_ocaml
-open Slang
+open Slanglib
 
 let wrap interp str =
   try interp str

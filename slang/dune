@@ -1,8 +1,7 @@
 (ocamlyacc parser)
 (ocamllex lexer)
 (library
-  (name slang)
-  (public_name slang)
+  (name slanglib)
   (modules
     Front_end
     Interp_0
@@ -10,6 +9,7 @@
     Interp_2
     Interp_3
     Jargon
+    Jargon_to_x86
     Ast
     Past
     Errors
@@ -19,7 +19,12 @@
     Parser
     Lexer
     Static
+    Tests
     Past_to_ast)
   (preprocess (pps ppx_yojson_conv))
 )
 
+(executable
+  (name slang)
+  (libraries slanglib)
+  (modules slang))

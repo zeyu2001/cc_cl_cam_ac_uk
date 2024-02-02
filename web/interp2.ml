@@ -1,4 +1,4 @@
-open Slang
+open Slanglib
 open Ast
 open Interp_2
 

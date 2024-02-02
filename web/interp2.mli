@@ -1,4 +1,4 @@
-open Slang
+open Slanglib
 
 type 'a steps = 'a Interp_2.interp_state list
 
