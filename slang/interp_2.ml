@@ -138,7 +138,7 @@ let string_of_env_value_stack n = string_of_list ";\n " string_of_env_or_value n
 
 let string_of_state (heap, i)  = 
     let rec aux k = 
-            if i < k 
+            if i <= k 
 	    then "" 
 	    else (string_of_int k) ^ " -> " ^ (string_of_value (IntMap.find k heap)) ^ "\n" ^ (aux (k+1))
     in if i = 0
