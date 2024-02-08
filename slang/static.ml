@@ -40,8 +40,14 @@ let make_inl loc t2 (e, t1)          = Inl (loc, t2, e), TEunion(t1, t2)
 let make_inr loc t1 (e, t2)          = Inr (loc, t1, e), TEunion(t1, t2)
 let make_lambda loc x t1 (e, t2)     = Lambda (loc, (x, t1, e)), TEarrow(t1, t2)
 let make_ref loc (e, t)              = Ref (loc, e), TEref t
-let make_letfun loc f x t1 (body, t2) (e, t) = LetFun (loc, f, (x, t1, body), t2, e), t
-let make_letrecfun loc f x t1 (body, t2) (e, t) = LetRecFun (loc, f, (x, t1, body), t2, e), t
+let make_letfun loc f x t1 t2 (body, t2') (e, t) =
+  match ty_eq t2 t2' with
+  | true  -> LetFun (loc, f, (x, t1, body), t2, e), t
+  | false -> report_expecting body (string_of_type t2) t2'
+let make_letrecfun loc f x t1 t2 (body, t2') (e, t) =
+  match ty_eq t2 t2' with
+  | true  -> LetRecFun (loc, f, (x, t1, body), t2, e), t
+  | false -> report_expecting body (string_of_type t2) t2'
 
 let make_let loc x t (e1, t1) (e2, t2)  =
   if ty_eq t t1
@@ -189,7 +195,7 @@ let rec elaborate env e =
      let make = if List.mem f (fv bound_vars_except_f body)
                 then make_letrecfun
                 else make_letfun in
-     make loc f x t1 body' (elaborate env' e)
+     make loc f x t1 t2 body' (elaborate env' e)
   | LetRecFun _ -> internal_error "LetRecFun found in parsed AST"
 
 and elaborate_seq loc env el =
