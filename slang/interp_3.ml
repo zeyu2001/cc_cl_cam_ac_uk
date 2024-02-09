@@ -135,32 +135,32 @@ and pp_location fmt = function
   | (l, Some i) -> pr fmt "%s = %d" l i
 
 and pp_instruction fmt = function
- | UNARY op        -> pr fmt "UNARY %s" (string_of_uop op)
- | OPER op         -> pr fmt "OPER %s" (string_of_bop op)
- | MK_PAIR         -> pr fmt "MK_PAIR"
- | FST             -> pr fmt "FST"
- | SND             -> pr fmt "SND"
- | MK_INL          -> pr fmt "MK_INL"
- | MK_INR          -> pr fmt "MK_INR"
- | MK_REF          -> pr fmt "MK_REF"
- | PUSH v          -> pr fmt "PUSH %a" pp_value v
- | LOOKUP x        -> pr fmt "LOOKUP %s" x
- | TEST label      -> pr fmt "TEST %a" pp_location label
- | CASE label      -> pr fmt "CASE %a" pp_location label
- | GOTO label      -> pr fmt "GOTO %a" pp_location label
- | APPLY           -> pr fmt "APPLY"
- | RETURN          -> pr fmt "RETURN"
- | HALT            -> pr fmt "HALT"
- | BIND x          -> pr fmt "BIND %s" x
- | LABEL label     -> pr fmt "LABEL %s" label
- | SWAP            -> pr fmt "SWAP"
- | POP             -> pr fmt "POP"
- | DEREF           -> pr fmt "DEREF"
- | ASSIGN          -> pr fmt "ASSIGN"
- | MK_CLOSURE loc  -> pr fmt "MK_CLOSURE(%a)" pp_location loc
- | MK_REC (v, loc) -> pr fmt "MK_REC(@[%s, %a)@]" v pp_location loc
+ | UNARY op        -> pr fmt "  UNARY %s" (string_of_uop op)
+ | OPER op         -> pr fmt "  OPER %s" (string_of_bop op)
+ | MK_PAIR         -> pr fmt "  MK_PAIR"
+ | FST             -> pr fmt "  FST"
+ | SND             -> pr fmt "  SND"
+ | MK_INL          -> pr fmt "  MK_INL"
+ | MK_INR          -> pr fmt "  MK_INR"
+ | MK_REF          -> pr fmt "  MK_REF"
+ | PUSH v          -> pr fmt "  PUSH %a" pp_value v
+ | LOOKUP x        -> pr fmt "  LOOKUP %s" x
+ | TEST label      -> pr fmt "  TEST %a" pp_location label
+ | CASE label      -> pr fmt "  CASE %a" pp_location label
+ | GOTO label      -> pr fmt "  GOTO %a" pp_location label
+ | APPLY           -> pr fmt "  APPLY"
+ | RETURN          -> pr fmt "  RETURN"
+ | HALT            -> pr fmt "  HALT"
+ | BIND x          -> pr fmt "  BIND %s" x
+ | LABEL label     -> pr fmt "LABEL %s:" label
+ | SWAP            -> pr fmt "  SWAP"
+ | POP             -> pr fmt "  POP"
+ | DEREF           -> pr fmt "  DEREF"
+ | ASSIGN          -> pr fmt "  ASSIGN"
+ | MK_CLOSURE loc  -> pr fmt "  MK_CLOSURE(%a)" pp_location loc
+ | MK_REC (v, loc) -> pr fmt "  MK_REC(@[%s, %a)@]" v pp_location loc
 
-and pp_code fmt c = pp_list fmt "@\n " pp_instruction c
+and pp_code fmt c = List.iter (pr fmt "%a@\n" pp_instruction) c
 
 let pp_env_or_value fmt = function
   | EV env -> pr fmt "EV %a" pp_env env
