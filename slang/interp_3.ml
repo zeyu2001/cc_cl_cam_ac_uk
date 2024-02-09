@@ -17,8 +17,7 @@ Timothy G. Griffin (tgg22@cam.ac.uk)
 
 
 open Ast
-
-let complain = Errors.complain
+open Errors
 
 type address = int
 
@@ -91,97 +90,103 @@ let rec lookup (env, x) =
 
 let rec search (evs, x) =
   match evs with
-  | [] -> complain (x ^ " is not defined!\n")
-  | (V _) :: rest -> search (rest, x)
-  | (RA _) :: rest -> search (rest, x)
-  | (EV env) :: rest ->
-    (match lookup(env, x) with
+  | [] -> complainf "%s is not defined!@\n" x
+  | V _ :: rest -> search (rest, x)
+  | RA _ :: rest -> search (rest, x)
+  | EV env :: rest ->
+    (match lookup (env, x) with
     | None -> search (rest, x)
-    | Some v -> v
-    )
+    | Some v -> v)
  let rec evs_to_env = function
   | [] -> []
   | (V _) :: rest -> evs_to_env rest
   | (RA _) :: rest -> evs_to_env rest
   | (EV env) :: rest -> env @ (evs_to_env rest)
 
-let string_of_list sep f l =
-   let rec aux f = function
-     | [] -> ""
-     | [t] -> (f t)
-     | t :: rest -> (f t) ^  sep  ^ (aux f rest)
-   in "[" ^ (aux f l) ^ "]"
+let pr = Format.fprintf
 
-let rec string_of_value = function
-     | REF a          -> "REF(" ^ (string_of_int a) ^ ")"
-     | BOOL b         -> string_of_bool b
-     | INT n          -> string_of_int n
-     | UNIT           -> "UNIT"
-     | PAIR(v1, v2)    -> "(" ^ (string_of_value v1) ^ ", " ^ (string_of_value v2) ^ ")"
-     | INL v           -> "inl(" ^ (string_of_value v) ^ ")"
-     | INR  v          -> "inr(" ^ (string_of_value v) ^ ")"
-     | CLOSURE (loc, c) -> "CLOSURE(" ^ (string_of_closure (loc, c)) ^ ")"
-     | REC_CLOSURE(loc) -> "REC_CLOSURE(" ^ (string_of_location loc) ^ ")"
+let pp_list fmt sep f l =
+   let rec aux f fmt = function
+     | [] -> ()
+     | [t] -> f fmt t
+     | t :: rest -> pr fmt "%a%(%)%a" f t sep (aux f) rest
+   in pr fmt "@[[%a]@]" (aux f) l
 
-and string_of_closure (loc, env) =
-   "(" ^ (string_of_location loc) ^ ", " ^ (string_of_env env) ^ ")"
+let rec pp_value fmt = function
+  | REF a            -> pr fmt "REF(%d)" a
+  | BOOL b           -> pr fmt "%b" b
+  | INT n            -> pr fmt "%d" n
+  | UNIT             -> pr fmt "UNIT"
+  | PAIR(v1, v2)     -> pr fmt "(@[%a,@ %a)@]" pp_value v1 pp_value v2
+  | INL v            -> pr fmt "inl(%a)" pp_value v
+  | INR  v           -> pr fmt "inr(%a)" pp_value v
+  | CLOSURE (loc, c) -> pr fmt "CLOSURE(%a)" pp_closure (loc, c)
+  | REC_CLOSURE(loc) -> pr fmt "REC_CLOSURE(%a)" pp_location loc
 
-and string_of_env env = string_of_list ",\n " string_of_binding env
+and pp_closure fmt (loc, env) =
+  pr fmt "(%a, %a)" pp_location loc pp_env env
 
-and string_of_binding (x, v) =    "(" ^ x ^ ", " ^ (string_of_value v) ^ ")"
+and pp_env fmt env = pp_list fmt ",@\n " pp_binding env
 
-and string_of_location = function
-  | (l, None) -> l
-  | (l, Some i) -> l ^ " = " ^ (string_of_int i)
+and pp_binding fmt (x, v) = pr fmt "(%s, %a)" x pp_value v
 
-and string_of_instruction = function
- | UNARY op        -> "UNARY " ^ string_of_uop op
- | OPER op         -> "OPER " ^ string_of_bop op
- | MK_PAIR         -> "MK_PAIR"
- | FST             -> "FST"
- | SND             -> "SND"
- | MK_INL          -> "MK_INL"
- | MK_INR          -> "MK_INR"
- | MK_REF          -> "MK_REF"
- | PUSH v          -> "PUSH " ^ string_of_value v
- | LOOKUP x        -> "LOOKUP " ^ x
- | TEST label      -> "TEST " ^ string_of_location label
- | CASE label      -> "CASE " ^ string_of_location label
- | GOTO label      -> "GOTO " ^ string_of_location label
- | APPLY           -> "APPLY"
- | RETURN          -> "RETURN"
- | HALT            -> "HALT"
- | BIND x          -> "BIND " ^ x
- | LABEL label     -> "LABEL " ^ label
- | SWAP            -> "SWAP"
- | POP             -> "POP"
- | DEREF           -> "DEREF"
- | ASSIGN          -> "ASSIGN"
- | MK_CLOSURE loc  -> "MK_CLOSURE(" ^ string_of_location loc ^ ")"
- | MK_REC (v, loc) -> "MK_REC(" ^ v ^ ", " ^ string_of_location loc ^ ")"
+and pp_location fmt = function
+  | (l, None) -> pr fmt "%s" l
+  | (l, Some i) -> pr fmt "%s = %d" l i
 
-and string_of_code c = string_of_list "\n " string_of_instruction c
+and pp_instruction fmt = function
+ | UNARY op        -> pr fmt "UNARY %s" (string_of_uop op)
+ | OPER op         -> pr fmt "OPER %s" (string_of_bop op)
+ | MK_PAIR         -> pr fmt "MK_PAIR"
+ | FST             -> pr fmt "FST"
+ | SND             -> pr fmt "SND"
+ | MK_INL          -> pr fmt "MK_INL"
+ | MK_INR          -> pr fmt "MK_INR"
+ | MK_REF          -> pr fmt "MK_REF"
+ | PUSH v          -> pr fmt "PUSH %a" pp_value v
+ | LOOKUP x        -> pr fmt "LOOKUP %s" x
+ | TEST label      -> pr fmt "TEST %a" pp_location label
+ | CASE label      -> pr fmt "CASE %a" pp_location label
+ | GOTO label      -> pr fmt "GOTO %a" pp_location label
+ | APPLY           -> pr fmt "APPLY"
+ | RETURN          -> pr fmt "RETURN"
+ | HALT            -> pr fmt "HALT"
+ | BIND x          -> pr fmt "BIND %s" x
+ | LABEL label     -> pr fmt "LABEL %s" label
+ | SWAP            -> pr fmt "SWAP"
+ | POP             -> pr fmt "POP"
+ | DEREF           -> pr fmt "DEREF"
+ | ASSIGN          -> pr fmt "ASSIGN"
+ | MK_CLOSURE loc  -> pr fmt "MK_CLOSURE(%a)" pp_location loc
+ | MK_REC (v, loc) -> pr fmt "MK_REC(@[%s, %a)@]" v pp_location loc
 
-let string_of_env_or_value = function
-  | EV env -> "EV " ^ string_of_env env
-  | V v -> "V " ^ string_of_value v
-  | RA i -> "RA " ^ string_of_int i
+and pp_code fmt c = pp_list fmt "@\n " pp_instruction c
 
-let string_of_env_value_stack = string_of_list ";\n " string_of_env_or_value
+let pp_env_or_value fmt = function
+  | EV env -> pr fmt "EV %a" pp_env env
+  | V v    -> pr fmt "V %a" pp_value v
+  | RA i   -> pr fmt "RA %d" i
+
+let pp_env_value_stack fmt = pp_list fmt ";@\n " pp_env_or_value
+
+let string_of_value = Format.asprintf "%a" pp_value
+let string_of_location = Format.asprintf "%a" pp_location
+let string_of_code = Format.asprintf "%a" pp_code
+let string_of_env_or_value = Format.asprintf "%a" pp_env_or_value
 
 (* THE MACHINE *)
 
 let installed = ref (Array.of_list [HALT])
 
-let string_of_installed_code ()  =
-    let size = Array.length !installed in
-    let rec aux k =
-      if size = k
-      then ""
-      else string_of_int k ^ ": "
-           ^ string_of_instruction !installed.(k)
-           ^ "\n" ^ aux (k+1)
-    in aux 0
+let pp_installed_code fmt =
+  let size = Array.length !installed in
+  let rec aux fmt k =
+    if size <> k
+    then pr fmt "%d: %a@\n%a" k pp_instruction !installed.(k) aux (k+1)
+  in aux fmt 0
+
+let string_of_installed_code () = Format.asprintf "%a"
+                                    (fun f () -> pp_installed_code f) ()
 
 let get_instruction cp = Array.get !installed cp
 
@@ -198,13 +203,10 @@ let string_of_heap ()  =
     else string_of_int k ^ " -> " ^ string_of_value (heap.(k)) ^ "\n" ^ aux (k+1)
   in "\nHeap = \n" ^ aux 0
 
-let string_of_state (cp, evs) =
-  "\nCode Pointer = "
-  ^ string_of_int cp ^ " -> "
-  ^ string_of_instruction (get_instruction cp)
-  ^ "\nStack = \n"
-  ^ string_of_env_value_stack evs
-  ^ if !next_address = 0 then "" else string_of_heap()
+let pp_state fmt (cp, evs) =
+  pr fmt "@\nCode Pointer = %d -> %a@\nStack = %a%s@\n"
+    cp pp_instruction (get_instruction cp) pp_env_value_stack evs
+    (if !next_address = 0 then "" else string_of_heap ())
 
 let readint () = let _ = print_string "input> " in read_int()
 
@@ -212,7 +214,7 @@ let do_unary = function
   | (NOT,  BOOL m) -> BOOL (not m)
   | (NEG,  INT m)  -> INT (-m)
   | (READ, UNIT)   -> INT (readint())
-  | (op, _) -> complain ("malformed unary operator: " ^ (string_of_unary_oper op))
+  | (op, _) -> complainf "malformed unary operator: %s" (string_of_unary_oper op)
 
 let do_oper = function
   | (AND,  BOOL m,  BOOL n) -> BOOL (m && n)
@@ -224,7 +226,7 @@ let do_oper = function
   | (SUB,  INT m,   INT n)  -> INT (m - n)
   | (MUL,  INT m,   INT n)  -> INT (m * n)
   | (DIV,  INT m,   INT n)  -> INT (m / n)
-  | (op, _, _)  -> complain ("malformed binary operator: " ^ (string_of_oper op))
+  | (op, _, _)  -> complainf "malformed binary operator: %s" (string_of_oper op)
 
 
 let step (cp, evs) =
@@ -258,14 +260,14 @@ let step (cp, evs) =
  | (LABEL (_),                           evs) -> (cp + 1, evs)
  | (HALT,                              evs) -> (cp, evs)
  | (GOTO (_, Some i),                  evs) -> (i, evs)
- | _ -> complain ("step : bad state = " ^ (string_of_state (cp, evs)) ^ "\n")
+ | _ -> complainf "step : bad state = %a\n" pp_state (cp, evs)
 
 (* COMPILE *)
 
 let label_ref = ref 0
 let new_label =
-    let get () = let v = !label_ref in (label_ref := (!label_ref) + 1; "L"^ (string_of_int v))
-    in get
+  let get () = let v = !label_ref in (label_ref := (!label_ref) + 1; "L"^ (string_of_int v))
+  in get
 
 let rec comp = function
   | Unit             -> ([], [PUSH UNIT])
@@ -373,51 +375,42 @@ let rec comp = function
                           (def @ defs1 @ defs2,
                            [MK_REC (f, (lab, None)); BIND f] @ c2 @ [SWAP; POP])
 let compile e =
-    let (defs, c) = comp e in
-    (* The HALT instruction needs an annotation to satisfy the types
-       We arbitarily use the annotation from the root of the AST
-    *)
-    let result = c @               (* body of program *)
-                   [HALT]          (* stop the interpreter *)
-                   @ defs in       (* the function definitions *)
-    let _ = if Option.verbose
-            then print_string ("\nCompiled Code = \n" ^ string_of_code result)
-            else ()
-    in result
+  let (defs, c) = comp e in
+  (* The HALT instruction needs an annotation to satisfy the types
+     We arbitarily use the annotation from the root of the AST
+   *)
+  let result = c             (* body of program *)
+             @ [HALT]        (* stop the interpreter *)
+             @ defs in       (* the function definitions *)
+  let () = if Option.verbose
+           then Format.printf "@\nCompiled Code = @\n%a" pp_code result
+  in result
 
-let rec driver n state =
-  let _ = if Option.verbose
-          then print_string ("\nstate " ^ string_of_int n ^ ":" ^ string_of_state state ^ "\n")
-          else ()
-  in match state with
-     | (cp, evs) ->
-       if HALT = get_instruction cp
-       then match evs with
-            | [V v] -> v
-            | _ -> complain ("driver : bad halted state = " ^ string_of_state state ^ "\n")
-       else driver (n + 1) (step state)
+let rec driver n (cp, evs as state) =
+  (if Option.verbose then Format.printf "\nstate %d:%a\n" n pp_state state);
+  match get_instruction cp, evs with
+  | HALT, [V v] -> v
+  | HALT, _     -> complainf "driver : bad halted state = %a\n" pp_state state
+  | _           -> driver (n + 1) (step state)
 
 (* put code listing into an array, associate an array index to each label *)
 let load l =
   let rec find lab = function
-    | []             -> complain ("find : " ^ lab ^ " is not found")
+    | []             -> complainf "find : %s is not found" lab
     | (x, v) :: rest -> if x = lab then v else find lab rest
   (* insert array index for each label *) in
   let apply_label_map_to_instruction m = function
-    | GOTO (lab, _)       -> GOTO (lab, Some (find lab m))
-    | TEST (lab, _)       -> TEST (lab, Some (find lab m))
-    | CASE (lab, _)       -> CASE (lab, Some (find lab m))
-    | MK_CLOSURE (lab, _) -> MK_CLOSURE (lab, Some (find lab m))
-    | MK_REC (f, (lab, _))  -> MK_REC(f, (lab, Some (find lab m)))
-    (*
-    |    MK_CLOSURE ((lab, _), fvars) -> MK_CLOSURE((lab, Some(find lab m)), fvars)
-     *)
-    | inst                     -> inst in
+    | GOTO (lab, _)        -> GOTO (lab, Some (find lab m))
+    | TEST (lab, _)        -> TEST (lab, Some (find lab m))
+    | CASE (lab, _)        -> CASE (lab, Some (find lab m))
+    | MK_CLOSURE (lab, _)  -> MK_CLOSURE (lab, Some (find lab m))
+    | MK_REC (f, (lab, _)) -> MK_REC(f, (lab, Some (find lab m)))
+    | inst                 -> inst in
    (* find array index for each label *)
   let listing_to_label_map l =
     let rec aux carry k = function
       | []                -> carry
-      | LABEL lab :: rest -> aux ((lab, k) :: carry) (k +1) rest
+      | LABEL lab :: rest -> aux ((lab, k) :: carry) (k+1) rest
       | _ :: rest         -> aux carry (k+1) rest
     in aux [] 0 l
   in let l_map = listing_to_label_map l
@@ -427,12 +420,10 @@ let load l =
 (* interpret : expr -> value *)
 let interpret e =
   let c = compile e in
-  let _ = installed := load c in
-  let _ = if Option.verbose
-          then print_string ("\nInstalled Code = \n" ^ (string_of_installed_code()))
-          else () in
+  let () = installed := load c in
+  let () = if Option.verbose
+           then Format.printf "\nInstalled Code = \n%s" (string_of_installed_code ()) in
   (* set the code pointer to 0 *)
   driver 1 (0 , [])
 
-let reset = fun _ -> next_address := 0; label_ref := 0; Array.fill heap 0 (Array.length heap) (INT 0)
-
+let reset = fun () -> next_address := 0; label_ref := 0; Array.fill heap 0 (Array.length heap) (INT 0)

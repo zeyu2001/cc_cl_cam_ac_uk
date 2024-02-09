@@ -70,9 +70,6 @@ val driver : int -> interp_state -> value * state
 val interpret : Ast.expr -> value * state
 
 val string_of_instruction : instruction -> string
-
 val string_of_value : value -> string
-
 val string_of_env_or_value : env_or_value -> string
-
 val string_of_code : code -> string
