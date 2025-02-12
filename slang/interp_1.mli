@@ -44,7 +44,7 @@ and binding = Ast.var * value
 and env = binding list
 
 type state =
-   | EXAMINE of expr_i1 * env * continuation
+   | INSPECT of expr_i1 * env * continuation
    | COMPUTE of continuation * value
 
 val step : state -> state
